@@ -19,7 +19,19 @@ app.get('/', function (req, res){
 ///////////////////////////////////////////////////////////////////////////
 
 app.get('/todos', function (req, res){
-	res.json(todos);
+	var query_params = req.query;
+	if(query_params.hasOwnProperty('completed')){
+		if(query_params.completed == 'true'){
+				query_params.completed = true;
+		}else{
+				query_params.completed = false;
+		}
+		filtered_todos = _.where(todos, {completed:query_params.completed});
+		res.json(filtered_todos);
+	}else{
+		res.json(todos);
+	}
+
 });
 
 /////////////////////////////////////////////////////////////////////////////
