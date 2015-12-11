@@ -5,7 +5,28 @@ var _ = require('underscore');
 ////////////////////////////////////////////////////////////////////////
 
 var PORT = process.env.PORT || 3000
-var todos =[];
+var todos =[
+  {
+    "description": "take dawn shopping",
+    "completed": false,
+    "id": 1
+  },
+  {
+    "description": "take dawn shopping",
+    "completed": true,
+    "id": 2
+  },
+  {
+    "description": "walk the dog",
+    "completed": true,
+    "id": 3
+  },
+  {
+    "description": "sleep",
+    "completed": false,
+    "id": 4
+  }
+];
 var todo_next_id =1;
 
 app.use(body_parser.json())
@@ -20,18 +41,22 @@ app.get('/', function (req, res){
 
 app.get('/todos', function (req, res){
 	var query_params = req.query;
+	var filtered_todos = todos;
 	if(query_params.hasOwnProperty('completed')){
 		if(query_params.completed == 'true'){
 				query_params.completed = true;
 		}else{
 				query_params.completed = false;
 		}
-		filtered_todos = _.where(todos, {completed:query_params.completed});
-		res.json(filtered_todos);
-	}else{
-		res.json(todos);
+		filtered_todos = _.where(filtered_todos, {completed:query_params.completed});
+		
 	}
-
+	if(query_params.hasOwnProperty('q') && query_params.length > 0{
+		filtered_todos = _.filter(filtered_todos, function (arr){
+			return(arr.description.toLowerCase().search(query_params.q.toLowerCase()) !=-1)			
+		});
+	}
+	res.json(filtered_todos);
 });
 
 /////////////////////////////////////////////////////////////////////////////
